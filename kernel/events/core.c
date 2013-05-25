@@ -6923,12 +6923,7 @@ SYSCALL_DEFINE5(perf_event_open,
 		 */
 		mutex_lock_double(&gctx->mutex, &ctx->mutex);
 
-<<<<<<< HEAD
-		perf_remove_from_context(group_leader);
-=======
-		mutex_lock(&gctx->mutex);
 		perf_remove_from_context(group_leader, false);
->>>>>>> 54b3f8d... perf: Fix race in removing an event
 
 		/*
 		 * Removing from the context ends up with disabled
