@@ -3998,6 +3998,8 @@ static void arizona_disable_fll(struct arizona_fll *fll)
 
 	arizona_fll_dbg(fll, "Disabling FLL\n");
 
+	regmap_update_bits(arizona->regmap, fll->base + 1,
+			   ARIZONA_FLL1_FREERUN, ARIZONA_FLL1_FREERUN);
 	regmap_update_bits_check(arizona->regmap, fll->base + 1,
 				 ARIZONA_FLL1_ENA, 0, &change);
 	regmap_update_bits(arizona->regmap, fll->base + 0x11,
