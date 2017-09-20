@@ -805,14 +805,11 @@ int usbnet_stop (struct net_device *net)
 	 */
 	dev->flags = 0;
 	del_timer_sync (&dev->delay);
-<<<<<<< HEAD
 	cancel_work_sync(&dev->bh_w);
-=======
 	tasklet_kill (&dev->bh);
 	if (!pm)
 		usb_autopm_put_interface(dev->intf);
 
->>>>>>> 2d4cf3d... usbnet: include wait queue head in device structure
 	if (info->manage_power &&
 	    !test_and_clear_bit(EVENT_NO_RUNTIME_PM, &dev->flags))
 		info->manage_power(dev, 0);
@@ -1383,20 +1380,12 @@ static void usbnet_bh (unsigned long param)
 	/* restart RX again after disabling due to high error rate */
 	clear_bit(EVENT_RX_KILL, &dev->flags);
 
-<<<<<<< HEAD
-	// waiting for all pending urbs to complete?
-	if (dev->wait) {
-		if ((dev->txq.qlen + dev->rxq.qlen + dev->done.qlen) == 0) {
-			wake_up(&unlink_wakeup);
-		}
-=======
 	/* waiting for all pending urbs to complete?
 	 * only then can we forgo submitting anew
 	 */
 	if (waitqueue_active(&dev->wait)) {
 		if (dev->txq.qlen + dev->rxq.qlen + dev->done.qlen == 0)
 			wake_up_all(&dev->wait);
->>>>>>> 2d4cf3d... usbnet: include wait queue head in device structure
 
 	// or are we maybe short a few urbs?
 	} else if (netif_running (dev->net) &&
